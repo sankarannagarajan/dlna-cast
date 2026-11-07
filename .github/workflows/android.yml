@@ -1,31 +1,28 @@
-
-yaml
 name: Build APK
-
-on: push
-
+on: [push, workflow_dispatch]
 jobs:
   compile:
     runs-on: ubuntu-24.04
     steps:
       - name: Fetch Code
         uses: actions/checkout@v4
-
       - name: Prep Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
+          python-version: '3.10'
       - name: Setup Tools
         run: |
           sudo apt-get update
           sudo apt-get install -y git zip unzip openjdk-17-jdk ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev ccache libncurses5 libstdc++6 autoconf libtool pkg-config
-
       - name: Setup Pip Packages
         run: |
           pip install --upgrade pip
           pip install buildozer virtualenv cython
-
       - name: Build Android File
         run: |
           yes | buildozer -v android debug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: dlnacast-apk
+          path: bin/*.apk
