@@ -1,11 +1,8 @@
+
 yaml
 name: Build APK
 
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+on: push
 
 jobs:
   compile:
